@@ -63,7 +63,7 @@ test.describe.serial('Main Wallet Functionality', () => {
   });
 
   // TC_Ebay_002
-  test.only('TC_Ebay_002: Validate same leaf category of related items', async () => {
+  test('TC_Ebay_002: Validate same leaf category of related items', async () => {
     // 1. Search for "wallet"
     await test.step('Navigate to eBay', async () => {
       await page.goto('https://www.ebay.com');
@@ -114,16 +114,65 @@ test.describe.serial('Main Wallet Functionality', () => {
   });
 
   // TC_Ebay_003
-  test('TC_Ebay_003: Verify price range of related products', async () => {
-    // 1. Search and open a product priced at $15
-    // 2. Check prices of related products
-    // TODO: Implement logic
+  test.only('TC_Ebay_003: Verify price range of related products', async () => {
+    let mainProductPrice = 0;
+    await test.step('Navigate to eBay', async () => {
+      await page.goto('https://www.ebay.com');
+      await page.waitForTimeout(5000);
+    });
+    await test.step('Search for Wallet', async () => {
+      await mainPage.searchFor('Wallet');
+      await page.waitForTimeout(5000);
+    });
+    await test.step('Find and open a product priced around $15', async () => {
+      // Find a product with price close to $15
+      const items = page.locator('ul.srp-results > li.s-item');
+      const count = await items.count();
+      let found = false;
+      for (let i = 0; i < count; i++) {
+        const priceText = await items.nth(i).locator('.s-item__price').textContent();
+        if (priceText) {
+          const priceMatch = priceText.replace(/[^\d.]/g, '');
+          const price = parseFloat(priceMatch);
+          if (price && Math.abs(price - 15) <= 2) { // within $2 of $15
+            mainProductPrice = price;
+            await items.nth(i).locator('a.s-item__link').click();
+            await page.waitForLoadState('domcontentloaded');
+            await page.waitForTimeout(3000);
+            found = true;
+            break;
+          }
+        }
+      }
+      expect(found).toBeTruthy();
+    });
+    await test.step('Extract and check prices of related products', async () => {
+      // Try to get related product prices (e.g., from similar/related items section)
+      // This selector may need adjustment for eBay's current DOM
+      const relatedPrices = await page.locator('[data-testid="item-card"] .s-item__price, [data-testid="item-card"] [class*="price"]').allTextContents();
+      if (relatedPrices.length === 0) {
+        // Fallback: try another common selector
+        // eBay sometimes uses carousel or grid for related items
+        expect(relatedPrices.length).toBeGreaterThan(0);
+      } else {
+        for (const priceText of relatedPrices) {
+          const priceMatch = priceText.replace(/[^\d.]/g, '');
+          const price = parseFloat(priceMatch);
+          // Accept prices within +/- 50% of main product price
+          expect(price).toBeGreaterThanOrEqual(mainProductPrice * 0.5);
+          expect(price).toBeLessThanOrEqual(mainProductPrice * 1.5);
+        }
+      }
+    });
+    await test.step('Take screenshot', async () => {
+      await takeScreenshot(page, 'related-products-price-range');
+    });
   });
 
   // TC_Ebay_004
-  test('TC_Ebay_004: Verify max 6 best seller products shown', async () => {
-    // 1. Search for "wallet" with more than 6 related best sellers
-    // 2. Open the main product
+  test('TC_Ebay_004: Verify max 6 similar products shown', async () => {
+    // 1. Search for "wallet" with 
+    // 2. Open the main product by cliccking on the product
     // TODO: Implement logic
   });
 
