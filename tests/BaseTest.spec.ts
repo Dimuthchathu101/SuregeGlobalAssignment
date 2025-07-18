@@ -1,5 +1,6 @@
 import { test, BrowserContext, Page, expect } from '@playwright/test';
 import { MainPage } from '../pages/main_age';
+import { ProductPage } from '../pages/product_page';
 const { takeScreenshot } = require('../utilities/utilities');
 
 test.describe('Main Wallet Functionality', () => {
@@ -8,6 +9,7 @@ test.describe('Main Wallet Functionality', () => {
     const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
     const page = await context.newPage();
     const mainPage = new MainPage(page);
+    const productPage = new ProductPage(page);
 
     await test.step('Navigate to eBay', async () => {
       await page.goto('https://www.ebay.com');
@@ -24,6 +26,18 @@ test.describe('Main Wallet Functionality', () => {
       await takeScreenshot(page, 'male-wallet-search');
     });
 
+    await test.step('Set Price Value', async () => {
+      // await productPage.clickPlusButton();
+      await page.waitForTimeout(5000);
+      await productPage.fillMinValue("12");
+      await productPage.fillMaxValue("20");
+    });
+
+    await test.step('Take screenshot', async () => {
+      await takeScreenshot(page, 'Setting Price');
+    });
+
     await context.close();
   });
+
 });
