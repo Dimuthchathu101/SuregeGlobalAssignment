@@ -1,0 +1,22 @@
+{
+  "name": "suregeglobalassignment",
+  "version": "1.0.0",
+  "description": "Automation Testing Scenario",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dimuthchathu101/SuregeGlobalAssignment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dimuthchathu101/SuregeGlobalAssignment/issues"
+  },
+  "homepage": "https://github.com/Dimuthchathu101/SuregeGlobalAssignment#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^24.0.14"
+  }
+}
