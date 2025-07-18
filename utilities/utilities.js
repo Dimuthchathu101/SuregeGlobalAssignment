@@ -9,6 +9,8 @@ const path = require('path');
  * @returns {Promise<string>} - The path to the saved screenshot
  */
 async function takeScreenshot(page, baseName, options = {}) {
+  // Set viewport size to 1920x1080 before taking screenshot
+  await page.setViewportSize({ width: 1920, height: 1080 });
   const dir = path.resolve('screenshots');
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
