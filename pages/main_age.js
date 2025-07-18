@@ -1,5 +1,6 @@
 // pages/mainPage.js
 const { expect } = require('@playwright/test');
+import { allure } from 'allure-playwright';
 
 class MainPage {
   constructor(page) {
@@ -17,6 +18,11 @@ class MainPage {
 
   // Method to perform a search
   async searchFor(text) {
+    allure.label('owner', 'QA Team');
+    allure.severity('critical');
+    allure.feature('Product Listing');
+    allure.story('Wallet Category');
+    allure.description('This test verifies that there are more than 6 products listed in the Wallet category on eBay.');
     await this.searchInput.fill(text);  // Fill the input field
     await this.mainSearchButton.click();  // Click the search button
   }
@@ -42,4 +48,4 @@ class MainPage {
   }
 }
 
-module.exports = { MainPage };
+export { MainPage };
