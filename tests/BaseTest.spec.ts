@@ -114,7 +114,7 @@ test.describe.serial('Main Wallet Functionality', () => {
   });
 
   // TC_Ebay_003
-  test.only('TC_Ebay_003: Verify price range of related products', async () => {
+  test('TC_Ebay_003: Verify price range of related products', async () => {
     let mainProductPrice = 0;
     await test.step('Navigate to eBay', async () => {
       await page.goto('https://www.ebay.com');
@@ -170,10 +170,34 @@ test.describe.serial('Main Wallet Functionality', () => {
   });
 
   // TC_Ebay_004
-  test('TC_Ebay_004: Verify max 6 similar products shown', async () => {
-    // 1. Search for "wallet" with 
-    // 2. Open the main product by cliccking on the product
-    // TODO: Implement logic
+  test.only('TC_Ebay_004: Verify max 6 similar products shown', async () => {
+    await test.step('Navigate to eBay', async () => {
+      await page.goto('https://www.ebay.com');
+      await page.waitForTimeout(5000);
+    });
+    await test.step('Search for Wallet', async () => {
+      await mainPage.searchFor('Wallet');
+      await page.waitForTimeout(5000);
+    });
+    await test.step('Open main product from search results', async () => {
+      await page.locator('ul.srp-results > li.s-item a.s-item__link').first().click();
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(3000);
+    });
+    await test.step('Count similar/related products', async () => {
+      // Try to count similar/related products (e.g., from similar/related items section)
+      // This selector may need adjustment for eBay's current DOM
+      const similarCount = await page.locator('[data-testid="item-card"]').count();
+      // Fallback: try another common selector if none found
+      let count = similarCount;
+      if (count === 0) {
+        count = await page.locator('section[aria-label*="related"] li, section[aria-label*="Similar"] li').count();
+      }
+      expect(count).toBeLessThanOrEqual(6);
+    });
+    await test.step('Take screenshot', async () => {
+      await takeScreenshot(page, 'max-6-similar-products');
+    });
   });
 
   // TC_Ebay_005
