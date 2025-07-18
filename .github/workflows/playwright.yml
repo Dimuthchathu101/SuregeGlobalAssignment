@@ -4,6 +4,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:  # Added this to enable manual triggering
 jobs:
   test:
     timeout-minutes: 60
