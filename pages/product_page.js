@@ -30,6 +30,8 @@ class ProductPage {
   async fillMaxValue(value) {
     await this.maxValue.fill(value);
   }
+
+  
 }
 
 module.exports = { ProductPage };
