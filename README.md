@@ -245,3 +245,10 @@ test.describe('DDT Wallet Search Tests', () => {
 
 - **GitHub**: https://github.com/Dimuthchathu101/SuregeGlobalAssignment
 - **Issues**: https://github.com/Dimuthchathu101/SuregeGlobalAssignment/issues
+
+## Accessibility Testing
+
+For accessibility testing, refer to the following repository (work in progress, not yet fully optimized):
+
+- **GitHub**: https://github.com/Dimuthchathu101/AccessbilityAdvanced
+

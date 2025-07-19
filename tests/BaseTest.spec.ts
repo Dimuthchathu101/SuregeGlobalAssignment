@@ -1,3 +1,17 @@
+/**
+ * eBay Wallet Product Testing Suite
+ * 
+ * This test suite validates eBay's wallet product functionality including:
+ * - Product search and listing verification
+ * - Related product recommendations
+ * - Price range validation
+ * - Category consistency checks
+ * - Similar product display limits
+ * 
+ * @author Dimuth C Bandara
+ * @version 1.0
+ */
+
 import { test, BrowserContext, Page, expect } from '@playwright/test';
 import { MainPage } from '../pages/main_age';
 import { ProductPage } from '../pages/product_page';
@@ -8,6 +22,8 @@ test.describe.serial('Main Wallet Functionality', () => {
   let page;
   let mainPage;
   let productPage;
+  let txtSearchForWallet = 'Wallet';
+  let txtSearchForMaleWallet = 'Male Wallet';
 
   test.beforeEach(async ({ browser }) => {
     context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
@@ -25,11 +41,18 @@ test.describe.serial('Main Wallet Functionality', () => {
     await context.close();
   });
 
-    // TC_Ebay_000
+    /**
+     * Test Case: TC_Ebay_000
+     * Objective: Verify there are more than 6 products in Wallet Category
+     * 
+     * This test validates that eBay returns sufficient search results
+     * when searching for wallet products, ensuring the category has
+     * adequate product listings for user browsing.
+     */
     test('TC_Ebay_000: Verify there are more than 6 products in Wallet Category', async () => {
 
       await test.step('Search for Wallet', async () => {
-        await mainPage.searchFor('Wallet');
+        await mainPage.searchFor(txtSearchForWallet);
         await page.waitForTimeout(5000);
       });
       await test.step('Count products in Wallet category', async () => {
@@ -46,11 +69,18 @@ test.describe.serial('Main Wallet Functionality', () => {
 
 
 
-  // TC_Ebay_001
+  /**
+   * Test Case: TC_Ebay_001
+   * Objective: Verify up to 6 best-selling related products appear
+   * 
+   * This test validates that eBay displays a maximum of 6 related products
+   * when viewing a specific wallet product, ensuring the recommendation
+   * system works correctly and doesn't overwhelm users with too many options.
+   */
   test('TC_Ebay_001: Verify up to 6 best-selling related products appear', async () => {
 
     await test.step('Search for Male Wallet', async () => {
-      await mainPage.searchFor('Male Wallet');
+      await mainPage.searchFor(txtSearchForMaleWallet);
       console.log('Searching for Male Wallet');
       await page.waitForTimeout(5000);
     });
@@ -89,11 +119,19 @@ test.describe.serial('Main Wallet Functionality', () => {
 
 
 
-test('TC_Ebay_002: Validate same category of related items', async () => {
+  /**
+   * Test Case: TC_Ebay_002
+   * Objective: Validate same category of related items
+   * 
+   * This test ensures that when searching for wallet products, the returned
+   * items are actually wallet-related and not unrelated products. It validates
+   * the search algorithm's accuracy and category filtering.
+   */
+  test('TC_Ebay_002: Validate same category of related items', async () => {
 
 
   await test.step('Search for Male Wallet', async () => {
-    await mainPage.searchFor('Male Wallet');
+    await mainPage.searchFor(txtSearchForMaleWallet);
     console.log('Searching for Male Wallet');
     await page.waitForSelector('li.s-item'); // Wait for results to load
   });
@@ -115,7 +153,7 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
     const matchPercentage = (matchingCount / titles.length) * 100;
     console.log(`Found ${matchingCount} of ${titles.length} items (${matchPercentage.toFixed(1)}%) contain wallet-related terms`);
     
-    return matchPercentage >= 90; // At least 90% match
+    return matchPercentage >= 90; // Assumpton - At least 90% match
   }
   
   await test.step('Verify items contain wallet in title', async () => {
@@ -128,12 +166,19 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
   });
 });
 
-  // TC_Ebay_003
+  /**
+   * Test Case: TC_Ebay_003
+   * Objective: Verify price range of related products
+   * 
+   * This test validates that related products fall within an acceptable
+   * price range compared to the main product, ensuring price consistency
+   * and preventing extreme price variations in recommendations.
+   */
   test('TC_Ebay_003: Verify price range of related products', async () => {
     let mainProductPrice = 0;
 
     await test.step('Search for Male Wallet', async () => {
-      await mainPage.searchFor('Male Wallet');
+      await mainPage.searchFor(txtSearchForMaleWallet);
       console.log('Searching for Male Wallet');
       await page.waitForSelector('li.s-item'); // Wait for results to load
     });
@@ -201,12 +246,18 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
   });
 
   
-  // TC_Ebay_004
+  /**
+   * Test Case: TC_Ebay_004
+   * Objective: Verify max 6 similar products shown
+   * 
+   * This test validates that eBay displays a maximum of 6 similar products
+   * on product detail pages, ensuring the recommendation system follows
+   * the business rule of not overwhelming users with too many options.
+   */
   test('TC_Ebay_004: Verify max 6 similar products shown', async () => {
 
-  
     await test.step('Search for Male Wallet', async () => {
-      await mainPage.searchFor('Male Wallet');
+      await mainPage.searchFor(txtSearchForMaleWallet);
       console.log('Searching for Male Wallet');
       await page.waitForSelector('li.s-item'); // Wait for results to load
     });
@@ -243,7 +294,14 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
     });
   });
 
-  // TC_Ebay_005
+  /**
+   * Test Case: TC_Ebay_005
+   * Objective: Verify behavior when fewer than 6 matches exist
+   * 
+   * This test validates the system's behavior when there are fewer than 6
+   * related products available, ensuring graceful handling of limited
+   * inventory scenarios without breaking the user experience.
+   */
   test('TC_Ebay_005: Verify behavior when fewer than 6 matches exist', async () => {
 
     await test.step('Search for specific wallet type with limited results', async () => {
@@ -282,8 +340,15 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
   });
 
 
-test('TC_Ebay_006: Verify behavior when no related products match', async () => {
-
+  /**
+   * Test Case: TC_Ebay_006
+   * Objective: Verify behavior when no related products match
+   * 
+   * This test validates the system's behavior when there are no related
+   * products available for a unique or rare item, ensuring the application
+   * handles edge cases gracefully without errors.
+   */
+  test('TC_Ebay_006: Verify behavior when no related products match', async () => {
 
   await test.step('Search for very specific unique wallet', async () => {
     await mainPage.searchFor('Antique Victorian Era Wallet 1800s');
@@ -336,11 +401,18 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
   });
 });
 
-  // TC_Ebay_007
+  /**
+   * Test Case: TC_Ebay_007
+   * Objective: Ensure no unrelated category products shown
+   * 
+   * This test validates that the recommendation system only shows
+   * wallet-related products and excludes unrelated categories,
+   * ensuring search relevance and user experience quality.
+   */
   test('TC_Ebay_007: Ensure no unrelated category products shown', async () => {
 
     await test.step('Search for Wallet', async () => {
-      await mainPage.searchFor('Wallet');
+      await mainPage.searchFor(txtSearchForWallet);
       await page.waitForTimeout(5000);
     });
     await test.step('Open first product from search results', async () => {
@@ -386,11 +458,18 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
     });
   });
 
-  // TC_Ebay_008
+  /**
+   * Test Case: TC_Ebay_008
+   * Objective: Exclude out-of-stock items from best sellers
+   * 
+   * This test validates that the recommendation system excludes
+   * out-of-stock items from related products, ensuring users only
+   * see available items they can actually purchase.
+   */
   test('TC_Ebay_008: Exclude out-of-stock items from best sellers', async () => {
 
     await test.step('Search for Wallet', async () => {
-      await mainPage.searchFor('Wallet');
+      await mainPage.searchFor(txtSearchForWallet);
       await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
@@ -426,11 +505,18 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
     });
   });
 
-  // TC_Ebay_009
+  /**
+   * Test Case: TC_Ebay_009
+   * Objective: Ensure correct tab behavior on related product click
+   * 
+   * This test validates that clicking on related products opens
+   * them in the correct tab/window, ensuring proper navigation
+   * behavior and user experience.
+   */
   test('TC_Ebay_009: Ensure correct tab behavior on related product click', async () => {
 
     await test.step('Search for Wallet', async () => {
-      await mainPage.searchFor('Wallet');
+      await mainPage.searchFor(txtSearchForWallet);
       await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
@@ -477,11 +563,18 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
     });
   });
 
-  // TC_Ebay_010
+  /**
+   * Test Case: TC_Ebay_010
+   * Objective: Verify sponsored items are not included
+   * 
+   * This test validates that sponsored/advertisement items are
+   * properly excluded from related product recommendations,
+   * ensuring organic search results are prioritized.
+   */
   test('TC_Ebay_010: Verify sponsored items are not included', async () => {
 
     await test.step('Search for Wallet', async () => {
-      await mainPage.searchFor('Wallet');
+      await mainPage.searchFor(txtSearchForWallet);
       await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
@@ -517,12 +610,19 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
     });
   });
 
-  // TC_Ebay_011
+  /**
+   * Test Case: TC_Ebay_011
+   * Objective: Ensure consistent price range logic
+   * 
+   * This test validates that the price range logic for related
+   * products is consistent across different scenarios, ensuring
+   * reliable and predictable recommendation behavior.
+   */
   test('TC_Ebay_011: Ensure consistent price range logic', async () => {
     let mainProductPrice = 0;
 
     await test.step('Search for Wallet', async () => {
-      await mainPage.searchFor('Wallet');
+      await mainPage.searchFor(txtSearchForWallet);
       await page.waitForSelector('li.s-item');
     });
 
@@ -555,11 +655,18 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
     });
   });
 
-  // TC_Ebay_012
+  /**
+   * Test Case: TC_Ebay_012
+   * Objective: Validate image quality and dimension consistency
+   * 
+   * This test validates that related product images have proper
+   * attributes and quality, ensuring visual consistency and
+   * accessibility standards are maintained.
+   */
   test('TC_Ebay_012: Validate image quality and dimension consistency', async () => {
 
     await test.step('Search for Wallet', async () => {
-      await mainPage.searchFor('Wallet');
+      await mainPage.searchFor(txtSearchForWallet);
       await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
@@ -608,11 +715,18 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
 
 
 
-  // TC_Ebay_013
+  /**
+   * Test Case: TC_Ebay_013
+   * Objective: Ensure there is no "Female Purse" in "Male Purse" Search
+   * 
+   * This test validates that gender-specific searches return
+   * appropriate results, ensuring that male wallet searches
+   * don't include female wallet products and vice versa.
+   */
   test('TC_Ebay_013: Ensure there is no "Female Purse" in "Male Purse" Search', async () => {
 
     await test.step('Search for Male Wallet', async () => {
-      await mainPage.searchFor('Male Wallet');
+      await mainPage.searchFor(txtSearchForMaleWallet);
       await page.waitForTimeout(5000);
     });
     await test.step('Check that no Female Wallet appears in results', async () => {
