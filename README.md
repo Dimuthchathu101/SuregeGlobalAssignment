@@ -151,9 +151,7 @@ npm run allure:serve
 - Full-page screenshots
 - Directory management
 
-## 🐳 Docker Support
 
-```
 
 ## 📝 Test Data
 

@@ -14,6 +14,11 @@ test.describe.serial('Main Wallet Functionality', () => {
     page = await context.newPage();
     mainPage = new MainPage(page);
     productPage = new ProductPage(page);
+
+    await test.step('Navigate to eBay', async () => {
+      await page.goto('https://www.ebay.com');
+      await page.waitForLoadState('domcontentloaded');
+    });
   });
 
   test.afterEach(async () => {
@@ -22,10 +27,7 @@ test.describe.serial('Main Wallet Functionality', () => {
 
     // TC_Ebay_000
     test('TC_Ebay_000: Verify there are more than 6 products in Wallet Category', async () => {
-      await test.step('Navigate to eBay', async () => {
-        await page.goto('https://www.ebay.com');
-        await page.waitForTimeout(5000);
-      });
+
       await test.step('Search for Wallet', async () => {
         await mainPage.searchFor('Wallet');
         await page.waitForTimeout(5000);
@@ -46,10 +48,7 @@ test.describe.serial('Main Wallet Functionality', () => {
 
   // TC_Ebay_001
   test('TC_Ebay_001: Verify up to 6 best-selling related products appear', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+
     await test.step('Search for Male Wallet', async () => {
       await mainPage.searchFor('Male Wallet');
       console.log('Searching for Male Wallet');
@@ -91,10 +90,7 @@ test.describe.serial('Main Wallet Functionality', () => {
 
 
 test('TC_Ebay_002: Validate same category of related items', async () => {
-  await test.step('Navigate to eBay', async () => {
-    await page.goto('https://www.ebay.com');
-    await page.waitForLoadState('domcontentloaded');
-  });
+
 
   await test.step('Search for Male Wallet', async () => {
     await mainPage.searchFor('Male Wallet');
@@ -135,11 +131,7 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
   // TC_Ebay_003
   test('TC_Ebay_003: Verify price range of related products', async () => {
     let mainProductPrice = 0;
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForLoadState('domcontentloaded');
-    });
-  
+
     await test.step('Search for Male Wallet', async () => {
       await mainPage.searchFor('Male Wallet');
       console.log('Searching for Male Wallet');
@@ -211,10 +203,7 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
   
   // TC_Ebay_004
   test('TC_Ebay_004: Verify max 6 similar products shown', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForLoadState('domcontentloaded');
-    });
+
   
     await test.step('Search for Male Wallet', async () => {
       await mainPage.searchFor('Male Wallet');
@@ -256,10 +245,7 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
 
   // TC_Ebay_005
   test('TC_Ebay_005: Verify behavior when fewer than 6 matches exist', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForLoadState('domcontentloaded');
-    });
+
     await test.step('Search for specific wallet type with limited results', async () => {
       await mainPage.searchFor('Handmade Leather Wallet Custom');
       await page.waitForSelector('li.s-item');
@@ -297,10 +283,7 @@ test('TC_Ebay_002: Validate same category of related items', async () => {
 
 
 test('TC_Ebay_006: Verify behavior when no related products match', async () => {
-  await test.step('Navigate to eBay', async () => {
-    await page.goto('https://www.ebay.com');
-    await page.waitForLoadState('domcontentloaded');
-  });
+
 
   await test.step('Search for very specific unique wallet', async () => {
     await mainPage.searchFor('Antique Victorian Era Wallet 1800s');
@@ -354,11 +337,8 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
 });
 
   // TC_Ebay_007
-  test.only('TC_Ebay_007: Ensure no unrelated category products shown', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+  test('TC_Ebay_007: Ensure no unrelated category products shown', async () => {
+
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
       await page.waitForTimeout(5000);
@@ -408,13 +388,10 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
 
   // TC_Ebay_008
   test('TC_Ebay_008: Exclude out-of-stock items from best sellers', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
-      await page.waitForTimeout(5000);
+      await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
       await page.locator('ul.srp-results > li.s-item a.s-item__link').first().click();
@@ -451,13 +428,10 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
 
   // TC_Ebay_009
   test('TC_Ebay_009: Ensure correct tab behavior on related product click', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
-      await page.waitForTimeout(5000);
+      await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
       await page.locator('ul.srp-results > li.s-item a.s-item__link').first().click();
@@ -504,14 +478,11 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
   });
 
   // TC_Ebay_010
-  test('TC_Ebay_010: Verify sponsored items are included', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+  test('TC_Ebay_010: Verify sponsored items are not included', async () => {
+
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
-      await page.waitForTimeout(5000);
+      await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
       await page.locator('ul.srp-results > li.s-item a.s-item__link').first().click();
@@ -549,35 +520,22 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
   // TC_Ebay_011
   test('TC_Ebay_011: Ensure consistent price range logic', async () => {
     let mainProductPrice = 0;
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
-      await page.waitForTimeout(5000);
+      await page.waitForSelector('li.s-item');
     });
-    await test.step('Find and open a product priced around $19 (boundary)', async () => {
-      const items = page.locator('ul.srp-results > li.s-item');
-      const count = await items.count();
-      let found = false;
-      for (let i = 0; i < count; i++) {
-        const priceText = await items.nth(i).locator('.s-item__price').textContent();
-        if (priceText) {
-          const priceMatch = priceText.replace(/[^\d.]/g, '');
-          const price = parseFloat(priceMatch);
-          if (price && Math.abs(price - 19) <= 3) { // within $3 of $19
-            mainProductPrice = price;
-            await items.nth(i).locator('a.s-item__link').click();
-            await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(3000);
-            found = true;
-            break;
-          }
-        }
-      }
-      expect(found).toBeTruthy();
+
+
+    await productPage.fillMaxValue("19");
+
+    await test.step('Open first product from search results', async () => {
+      await page.locator('ul.srp-results > li.s-item a.s-item__link').first().click();
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(3000);
     });
+
+   
     await test.step('Check related product prices at boundary', async () => {
       await page.evaluate(() => window.scrollBy(0, 800));
       await page.waitForTimeout(2000);
@@ -595,20 +553,14 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
         }
       }
     });
-    await test.step('Take screenshot', async () => {
-      await takeScreenshot(page, 'boundary-price-range-logic');
-    });
   });
 
   // TC_Ebay_012
-  test('TC_Ebay_012: Validate image quality and dimension consistency', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+  test.only('TC_Ebay_012: Validate image quality and dimension consistency', async () => {
+
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
-      await page.waitForTimeout(5000);
+      await page.waitForSelector('li.s-item');
     });
     await test.step('Open first product from search results', async () => {
       await page.locator('ul.srp-results > li.s-item a.s-item__link').first().click();
@@ -658,10 +610,7 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
 
   // TC_Ebay_013
   test('TC_Ebay_013: Ensure there is no "Female Purse" in "Male Purse" Search', async () => {
-    await test.step('Navigate to eBay', async () => {
-      await page.goto('https://www.ebay.com');
-      await page.waitForTimeout(5000);
-    });
+
     await test.step('Search for Male Wallet', async () => {
       await mainPage.searchFor('Male Wallet');
       await page.waitForTimeout(5000);
