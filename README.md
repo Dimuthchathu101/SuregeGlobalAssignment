@@ -26,8 +26,7 @@ SuregeGlobalAssignment/
 ├── allure-results/              # Allure test results
 ├── playwright-report/           # Playwright HTML reports
 ├── playwright.config.ts         # Playwright configuration
-├── package.json                 # Project dependencies and scripts
-└── Dockerfile                   # Docker configuration
+└── package.json                 # Project dependencies and scripts
 ```
 
 ## 🚀 Getting Started
@@ -186,6 +185,56 @@ The project is configured for CI/CD environments:
 - Retry mechanism for flaky tests
 - Allure report generation
 - Screenshot capture for debugging
+
+## 🚀 Future Enhancements
+
+### Data-Driven Testing (DDT) Implementation
+
+The project is planned to implement Data-Driven Testing (DDT) to enhance test coverage and maintainability:
+
+#### **DDT Benefits:**
+- **Test Data Separation**: Externalize test data from test logic
+- **Multiple Test Scenarios**: Run same test with different data sets
+- **Maintainability**: Easy to update test data without code changes
+- **Scalability**: Add new test scenarios by simply adding data rows
+
+#### **Planned DDT Structure:**
+```
+data/
+├── test-data.json              # Main test data file
+├── search-terms.json           # Search term variations
+├── price-ranges.json           # Price range test data
+└── categories.json             # Category validation data
+```
+
+#### **DDT Implementation Steps:**
+1. **Data Files Creation**: JSON/CSV files containing test parameters
+2. **Test Data Utilities**: Helper functions to load and parse test data
+3. **Parameterized Tests**: Modify existing tests to accept data parameters
+4. **Data Validation**: Ensure test data integrity and format validation
+5. **Reporting Enhancement**: Include test data in Allure reports
+
+#### **Example DDT Test Structure:**
+```typescript
+// Future implementation
+test.describe('DDT Wallet Search Tests', () => {
+  const testData = loadTestData('search-terms.json');
+  
+  for (const data of testData) {
+    test(`Search for ${data.searchTerm}`, async ({ page }) => {
+      await mainPage.searchFor(data.searchTerm);
+      await expect(page.locator(data.expectedSelector)).toBeVisible();
+    });
+  }
+});
+```
+
+#### **DDT Data Categories:**
+- **Search Terms**: Various wallet types, brands, and categories
+- **Price Ranges**: Different price points for validation
+- **Product Categories**: Wallet subcategories and related items
+- **Edge Cases**: Boundary conditions and error scenarios
+- **Localization**: Multi-language and regional variations
 
 
 ## 👥 Authors

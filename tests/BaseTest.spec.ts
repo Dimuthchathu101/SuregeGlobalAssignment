@@ -556,7 +556,7 @@ test('TC_Ebay_006: Verify behavior when no related products match', async () => 
   });
 
   // TC_Ebay_012
-  test.only('TC_Ebay_012: Validate image quality and dimension consistency', async () => {
+  test('TC_Ebay_012: Validate image quality and dimension consistency', async () => {
 
     await test.step('Search for Wallet', async () => {
       await mainPage.searchFor('Wallet');
