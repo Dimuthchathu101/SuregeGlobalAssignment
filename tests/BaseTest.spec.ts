@@ -18,11 +18,17 @@ import { ProductPage } from '../pages/product_page';
 const { takeScreenshot } = require('../utilities/utilities');
 
 test.describe.serial('Main Wallet Functionality', () => {
+  // Browser context for isolated test environment
   let context;
+  // Playwright page object for browser interactions
   let page;
+  // Page object representing the main page
   let mainPage;
+  // Page object representing the product page
   let productPage;
+  // Search term for generic wallet
   let txtSearchForWallet = 'Wallet';
+  // Search term for male wallet
   let txtSearchForMaleWallet = 'Male Wallet';
 
   test.beforeEach(async ({ browser }) => {
